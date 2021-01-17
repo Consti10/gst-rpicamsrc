@@ -637,6 +637,13 @@ static int parse_cmdline(int argc, const char **argv, RASPIVID_STATE *state)
          i++;
          break;
       }
+	  
+	  case CommandSlices:
+      {
+         //state->config.intra_refresh_type = raspicli_map_xref(argv[i + 1], intra_refresh_map, intra_refresh_map_size);
+         i++;
+         break;
+      }
 
       default:
       {
