@@ -202,6 +202,7 @@ static void display_valid_parameters(char *app_name);
 #define CommandSettings     25
 #define CommandSensorMode   26
 #define CommandIntraRefreshType 27
+#define CommandSlices 28
 
 static COMMAND_LIST cmdline_commands[] =
 {
@@ -233,6 +234,7 @@ static COMMAND_LIST cmdline_commands[] =
    { CommandSettings,      "-settings",   "set","Retrieve camera settings and write to stdout", 0},
    { CommandSensorMode,    "-mode",       "md", "Force sensor mode. 0=auto. See docs for other modes available", 1},
    { CommandIntraRefreshType,"-irefresh", "if", "Set intra refresh type", 1},
+   { CommandSlices,        "-slices",     "sl", "Horizontal slices per frame. Default 1 (off)", 1},
 };
 
 static int cmdline_commands_size = sizeof(cmdline_commands) / sizeof(cmdline_commands[0]);
