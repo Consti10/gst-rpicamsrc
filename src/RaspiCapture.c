@@ -1432,8 +1432,24 @@ static MMAL_STATUS_T create_encoder_component(RASPIVID_STATE *state)
    
    if (config->encoding == MMAL_ENCODING_H264 && config->slices != 1)
    { 
-		// TODO configure slices
-		vcos_log_error("Selected slcies %d",config->slices);
+		if(config->width <=1280){
+			int frame_mb_rows = VCOS_ALIGN_UP(config->height, 16) >> 4;
+			if (state->slices > frame_mb_rows){ //warn user if too many slices selected
+				vcos_log_error("H264 Slice count (%d) exceeds number of macroblock rows (%d). Setting slices to %d.\n", state->slices, frame_mb_rows, frame_mb_rows);
+				// Continue rather than abort..
+			}
+			int slice_row_mb = frame_mb_rows/state->slices;
+			if (frame_mb_rows - config->slices*slice_row_mb){
+				slice_row_mb++; //must round up to avoid extra slice if not evenly divided
+			}	
+			status = mmal_port_parameter_set_uint32(encoder_output, MMAL_PARAMETER_MB_ROWS_PER_SLICE, slice_row_mb);
+			if (status != MMAL_SUCCESS){
+				vcos_log_error("Unable to set number of slices");
+				goto error;
+			}
+		}else{
+			vcos_log_error("Cannot enable sliced encoding for resolution %d",config->width);
+		}
    }
 
    if (config->encoding == MMAL_ENCODING_H264 && config->quantisationParameter)
