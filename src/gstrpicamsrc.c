@@ -135,6 +135,7 @@ enum
   PROP_ANNOTATION_TEXT_COLOUR,
   PROP_ANNOTATION_TEXT_BG_COLOUR,
   PROP_INTRA_REFRESH_TYPE,
+  PROP_SLICES,
 #ifdef GST_RPI_CAM_SRC_ENABLE_VIDEO_DIRECTION
   PROP_VIDEO_DIRECTION,
 #endif
@@ -473,6 +474,15 @@ gst_rpi_cam_src_class_init (GstRpiCamSrcClass * klass)
           GST_RPI_CAM_SRC_TYPE_INTRA_REFRESH_TYPE,
           GST_RPI_CAM_SRC_INTRA_REFRESH_TYPE_NONE,
           G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS));
+
+  g_object_class_install_property (gobject_class, PROP_SLICES,
+      g_param_spec_enum ("horizontal-slices-per-frame", "Horizontal Slices per frame",
+          "N of horizontal slices to use per frame, 1 to disable",
+          GST_RPI_CAM_SRC_TYPE_SLICES,
+          GST_RPI_CAM_SRC_SLICES_NONE,
+          G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS));
+		  
+		  
   g_object_class_install_property (gobject_class, PROP_ANNOTATION_TEXT_SIZE,
       g_param_spec_int ("annotation-text-size", "Annotation text size",
           "Set the size of annotation text (in pixels) (0 = Auto)", 0,
