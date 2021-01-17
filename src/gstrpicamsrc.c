@@ -158,6 +158,7 @@ enum
 #define VIDEO_STABILISATION_DEFAULT FALSE
 #define EXPOSURE_COMPENSATION_DEFAULT 0
 #define KEYFRAME_INTERVAL_DEFAULT -1
+#define SLICES_DEFAULT 1
 
 #define EXPOSURE_MODE_DEFAULT GST_RPI_CAM_SRC_EXPOSURE_MODE_AUTO
 #define EXPOSURE_METERING_MODE_DEFAULT GST_RPI_CAM_SRC_EXPOSURE_METERING_MODE_AVERAGE
@@ -475,11 +476,12 @@ gst_rpi_cam_src_class_init (GstRpiCamSrcClass * klass)
           GST_RPI_CAM_SRC_INTRA_REFRESH_TYPE_NONE,
           G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS));
 
+
+
   g_object_class_install_property (gobject_class, PROP_SLICES,
-      g_param_spec_enum ("horizontal-slices-per-frame", "Horizontal Slices per frame",
+      g_param_spec_int ("horizontal-slices-per-frame", "Horizontal Slices per frame",
           "N of horizontal slices to use per frame, 1 to disable",
-          GST_RPI_CAM_SRC_TYPE_SLICES,
-          GST_RPI_CAM_SRC_SLICES_NONE,
+          1, G_MAXINT, SLICES_DEFAULT,
           G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS));
 		  
 		  
