@@ -99,6 +99,7 @@ typedef struct
    int fps_n;                      /// Requested frame rate (fps) numerator
    int fps_d;                      /// Requested frame rate (fps) denominator
    int intraperiod;                    /// Intra-refresh period (key frame rate)
+   int slices;                         /// Horizontal slices per frame. Default 1 (off)
    int quantisationParameter;          /// Quantisation parameter - quality. Set bitrate 0 and set this for variable bitrate
    int bInlineHeaders;                  /// Insert inline headers to stream (SPS, PPS)
    int demoMode;                       /// Run app in demo mode

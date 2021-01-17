@@ -266,6 +266,7 @@ void raspicapture_default_config(RASPIVID_CONFIG *config)
    config->fps_n = VIDEO_FRAME_RATE_NUM;
    config->fps_d = VIDEO_FRAME_RATE_DEN;
    config->intraperiod = -1;    // Not set
+   config->slices=1; // Disabled
    config->quantisationParameter = 0;
    config->demoMode = 0;
    config->demoInterval = 250; // ms
@@ -640,8 +641,10 @@ static int parse_cmdline(int argc, const char **argv, RASPIVID_STATE *state)
 	  
 	  case CommandSlices:
       {
-         //state->config.intra_refresh_type = raspicli_map_xref(argv[i + 1], intra_refresh_map, intra_refresh_map_size);
-         i++;
+         if (sscanf(argv[i + 1], "%u", &state->slices) == 1)
+            i++;
+         else
+            valid = 0;
          break;
       }
 
@@ -1425,6 +1428,12 @@ static MMAL_STATUS_T create_encoder_component(RASPIVID_STATE *state)
          vcos_log_error("Unable to set intraperiod");
          goto error;
       }
+   }
+   
+   if (config->encoding == MMAL_ENCODING_H264 && config->slices != 1)
+   { 
+		// TODO configure slices
+		vcos_log_error("Selected slcies %d",config->slices);
    }
 
    if (config->encoding == MMAL_ENCODING_H264 && config->quantisationParameter)
