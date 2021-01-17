@@ -1453,6 +1453,26 @@ static MMAL_STATUS_T create_encoder_component(RASPIVID_STATE *state)
 			vcos_log_error("Cannot enable sliced encoding for resolution %d",config->width);
 		}
    }
+   // testing   
+   {
+      /*status = mmal_port_parameter_set_uint32(encoder_output, MMAL_PARAMETER_MB_ROWS_PER_SLICE, slice_row_mb);
+      if (status != MMAL_SUCCESS){
+         vcos_log_error("Unable to set XXX");
+         goto error;
+      }*/
+      /*GST_DEBUG ("Setting MMAL_PARAMETER_VIDEO_ENCODE_H264_DISABLE_CABAC to true");
+      status=mmal_port_parameter_set_boolean(encoder_output,MMAL_PARAMETER_VIDEO_ENCODE_H264_DISABLE_CABAC,1);
+      if (status != MMAL_SUCCESS){
+         vcos_log_error("Unable to set XXX");
+         goto error;
+      }*/
+      /*GST_DEBUG ("Setting MMAL_PARAMETER_VIDEO_ENCODE_H264_LOW_DELAY_HRD_FLAG  to true");
+      status=mmal_port_parameter_set_boolean(encoder_output,MMAL_PARAMETER_VIDEO_ENCODE_H264_LOW_DELAY_HRD_FLAG ,1);
+      if (status != MMAL_SUCCESS){
+         vcos_log_error("Unable to set XXX");
+         goto error;
+      }*/
+   }
 
    if (config->encoding == MMAL_ENCODING_H264 && config->quantisationParameter)
    {
