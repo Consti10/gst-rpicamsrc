@@ -1443,6 +1443,7 @@ static MMAL_STATUS_T create_encoder_component(RASPIVID_STATE *state)
 			if (frame_mb_rows - config->slices*slice_row_mb){
 				slice_row_mb++; //must round up to avoid extra slice if not evenly divided
 			}	
+			GST_DEBUG ("Setting MMAL_PARAMETER_MB_ROWS_PER_SLICE to %d",slice_row_mb);
 			status = mmal_port_parameter_set_uint32(encoder_output, MMAL_PARAMETER_MB_ROWS_PER_SLICE, slice_row_mb);
 			if (status != MMAL_SUCCESS){
 				vcos_log_error("Unable to set number of slices");
