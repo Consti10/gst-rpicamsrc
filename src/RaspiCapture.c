@@ -1432,13 +1432,14 @@ static MMAL_STATUS_T create_encoder_component(RASPIVID_STATE *state)
    
    if (config->encoding == MMAL_ENCODING_H264 && config->slices != 1)
    { 
+		GST_DEBUG ("User selected sliced encoding %d",config->slices);
 		if(config->width <=1280){
 			int frame_mb_rows = VCOS_ALIGN_UP(config->height, 16) >> 4;
-			if (state->slices > frame_mb_rows){ //warn user if too many slices selected
-				vcos_log_error("H264 Slice count (%d) exceeds number of macroblock rows (%d). Setting slices to %d.\n", state->slices, frame_mb_rows, frame_mb_rows);
+			if (config->slices > frame_mb_rows){ //warn user if too many slices selected
+				vcos_log_error("H264 Slice count (%d) exceeds number of macroblock rows (%d). Setting slices to %d.\n", config->slices, frame_mb_rows, frame_mb_rows);
 				// Continue rather than abort..
 			}
-			int slice_row_mb = frame_mb_rows/state->slices;
+			int slice_row_mb = frame_mb_rows/config->slices;
 			if (frame_mb_rows - config->slices*slice_row_mb){
 				slice_row_mb++; //must round up to avoid extra slice if not evenly divided
 			}	
