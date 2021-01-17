@@ -316,6 +316,15 @@ gst_rpi_cam_src_class_init (GstRpiCamSrcClass * klass)
           "Interval (in frames) between I frames. -1 = automatic, 0 = single-keyframe",
           -1, G_MAXINT, KEYFRAME_INTERVAL_DEFAULT,
           G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS));
+		  
+
+  g_object_class_install_property (gobject_class, PROP_SLICES,
+      g_param_spec_int ("horizontal-slices-per-frame", "Horizontal Slices per frame",
+          "N of horizontal slices to use per frame, 1 to disable",
+          1, G_MAXINT, SLICES_DEFAULT,
+          G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS));
+
+		  
   g_object_class_install_property (gobject_class, PROP_PREVIEW,
       g_param_spec_boolean ("preview", "Preview Window",
           "Display preview window overlay", TRUE,
@@ -475,16 +484,6 @@ gst_rpi_cam_src_class_init (GstRpiCamSrcClass * klass)
           GST_RPI_CAM_SRC_TYPE_INTRA_REFRESH_TYPE,
           GST_RPI_CAM_SRC_INTRA_REFRESH_TYPE_NONE,
           G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS));
-
-
-
-  g_object_class_install_property (gobject_class, PROP_SLICES,
-      g_param_spec_int ("horizontal-slices-per-frame", "Horizontal Slices per frame",
-          "N of horizontal slices to use per frame, 1 to disable",
-          1, G_MAXINT, SLICES_DEFAULT,
-          G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS));
-		  
-		  
   g_object_class_install_property (gobject_class, PROP_ANNOTATION_TEXT_SIZE,
       g_param_spec_int ("annotation-text-size", "Annotation text size",
           "Set the size of annotation text (in pixels) (0 = Auto)", 0,
@@ -840,6 +839,12 @@ gst_rpi_cam_src_set_property (GObject * object, guint prop_id,
       src->capture_config.intraperiod = g_value_get_int (value);
       src->capture_config.change_flags |= PROP_CHANGE_ENCODING;
       break;
+	  
+	case PROP_SLICES:
+      src->capture_config.slices = g_value_get_int (value);
+      src->capture_config.change_flags |= PROP_CHANGE_ENCODING;
+      break;
+	  
     case PROP_PREVIEW:
       src->capture_config.preview_parameters.wantPreview =
           g_value_get_boolean (value);
@@ -1054,6 +1059,9 @@ gst_rpi_cam_src_get_property (GObject * object, guint prop_id,
     case PROP_KEYFRAME_INTERVAL:
       g_value_set_int (value, src->capture_config.intraperiod);
       break;
+	case PROP_SLICES:
+      g_value_set_int (value, src->capture_config.slices);
+      break;  
     case PROP_PREVIEW:
       g_value_set_boolean (value,
           src->capture_config.preview_parameters.wantPreview);
