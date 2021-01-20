@@ -1433,6 +1433,10 @@ static MMAL_STATUS_T create_encoder_component(RASPIVID_STATE *state)
    if (config->encoding == MMAL_ENCODING_H264 && config->slices != 1)
    { 
 		GST_DEBUG ("User selected sliced encoding %d",config->slices);
+      // Nope, this limit makes sense, if enabling sliced encoding for higher resolutions pi might crash
+      //if(config->width>1280){
+      //   vcos_log_error("Enabling sliced encoding for resolution %d - not officially supported",config->width);
+      //}
 		if(config->width <=1280){
 			int frame_mb_rows = VCOS_ALIGN_UP(config->height, 16) >> 4;
 			if (config->slices > frame_mb_rows){ //warn user if too many slices selected
@@ -1449,9 +1453,19 @@ static MMAL_STATUS_T create_encoder_component(RASPIVID_STATE *state)
 				vcos_log_error("Unable to set number of slices");
 				goto error;
 			}
-		}else{
+		}
+      else{
 			vcos_log_error("Cannot enable sliced encoding for resolution %d",config->width);
 		}
+      // experimental add this param
+      status=mmal_port_parameter_set_boolean(encoder_output,MMAL_PARAMETER_VIDEO_ENCODE_SEPARATE_NAL_BUFS,1);
+      if (status != MMAL_SUCCESS){
+         vcos_log_error("Unable to set MMAL_PARAMETER_VIDEO_ENCODE_SEPARATE_NAL_BUFS");
+         goto error;
+      }else{
+         GST_DEBUG("Successfully set MMAL_PARAMETER_VIDEO_ENCODE_SEPARATE_NAL_BUFS to true");
+      }
+      
    }
    // testing   
    {
